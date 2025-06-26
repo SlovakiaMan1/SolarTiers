@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solar Tiers Editor</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #1e1e1e; color: white; margin: 0; padding: 20px; }
+    h1 { text-align: center; }
+    .tiers { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+    .tier-column { background: #2c2c2c; border-radius: 8px; padding: 10px 15px; width: 250px; min-height: 150px; }
+    .tier-column h2 { text-align: center; border-bottom: 1px solid #444; }
+    .player { display: flex; align-items: center; margin: 10px 0; background: #3a3a3a; padding: 5px; border-radius: 5px; cursor: grab; }
+    .player img { width: 32px; height: 32px; margin-right: 10px; border-radius: 4px; }
+    .player span.name { flex-grow: 1; }
+    .player button { background: red; color: white; border: none; padding: 4px 6px; margin-left: 8px; border-radius: 3px; cursor: pointer; }
+    #addForm { text-align: center; margin: 20px auto; }
+    #addForm input, #addForm select { padding: 6px; margin: 5px; }
+    #saveBtn { margin-top: 10px; padding: 10px 20px; background: green; color: white; border: none; border-radius: 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Solar Tiers Editor</h1>
+  <div id="addForm">
+    <input type="text" id="username" placeholder="Username">
+    <input type="text" id="region" placeholder="Region (EU/NA/AS)">
+    <select id="tierSelect">
+      <option value="tier1">Tier 1</option>
+      <option value="tier2">Tier 2</option>
+      <option value="tier3">Tier 3</option>
+      <option value="tier4">Tier 4</option>
+      <option value="tier5">Tier 5</option>
+    </select>
+    <button onclick="addPlayer()">Add Player</button>
+    <br>
+    <button id="saveBtn" onclick="saveHtml()">Download HTML</button>
+  </div>
+  <div class="tiers">
+    <div class="tier-column" id="tier1"><h2>TIER 1</h2></div>
+    <div class="tier-column" id="tier2"><h2>TIER 2</h2></div>
+    <div class="tier-column" id="tier3"><h2>TIER 3</h2></div>
+    <div class="tier-column" id="tier4"><h2>TIER 4</h2></div>
+    <div class="tier-column" id="tier5"><h2>TIER 5</h2></div>
+  </div>
+
+  <script>
+    function addPlayer() {
+      const username = document.getElementById('username').value.trim();
+      const region = document.getElementById('region').value.trim();
+      const tier = document.getElementById('tierSelect').value;
+      if (!username || !region) return alert("Fill in all fields");
+
+      const player = document.createElement('div');
+      player.className = 'player';
+      player.innerHTML = \`
+        <img src="https://minotar.net/avatar/\${username}/32">
+        <span class="name">\${username}</span>
+        <span class="region">\${region}</span>
+        <button onclick="this.parentElement.remove()">X</button>
+      \`;
+      document.getElementById(tier).appendChild(player);
+      document.getElementById('username').value = '';
+      document.getElementById('region').value = '';
+    }
+
+    function saveHtml() {
+      const html = document.documentElement.outerHTML;
+      const blob = new Blob([html], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'solar_tiers_edited.html';
+      a.click();
+    }
+  </script>
+</body>
+</html>
